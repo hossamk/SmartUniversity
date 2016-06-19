@@ -17,6 +17,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.smartuniversitygp.smartuniversity.app.AppConfig;
 import com.smartuniversitygp.smartuniversity.app.AppController;
 import com.smartuniversitygp.smartuniversity.helper.SessionManager;
+import com.smartuniversitygp.smartuniversity.helper.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,9 +99,15 @@ public class LoginActivity extends AppCompatActivity {
                     // Check for error node in json
                     if (!error) {
                         String token = jObj.getString("token");
+                        String first = jObj.getString("firstName");
+                        String last = jObj.getString("lastName");
+                        String email = jObj.getString("email");
+                        String type = jObj.getString("type");
+                        User user = new User(first, last, email, type, token);
+
                         // user successfully logged in
                         // Create login session
-                        session.setLogin(true, token);
+                        session.setLogin(true, user);
 
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
