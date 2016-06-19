@@ -5,5 +5,5 @@ package com.smartuniversitygp.smartuniversity.app;
  */
 public class AppConfig {
     // login url
-    public static String URL_LOGIN = "http://smartuniversitygp.com/request/login.php";
+    public static String URL_LOGIN = "http://www.smartuniversitygp.com/request/login.php";
 }
