@@ -9,12 +9,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.smartuniversitygp.smartuniversity.helper.SessionManager;
+
 public class LoginActivity extends AppCompatActivity {
 
     private Button btnLogin;
     private EditText etEmail;
     private EditText etPassword;
     private ProgressDialog pDialog;
+    private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,17 @@ public class LoginActivity extends AppCompatActivity {
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
+
+        // Session manager
+        session = new SessionManager(getApplicationContext());
+
+        // Check if user is already logged in or not
+        if (session.isLoggedIn()) {
+            // User is already logged in. move to main activity
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         // Login button Click Event
         btnLogin.setOnClickListener(new View.OnClickListener() {
