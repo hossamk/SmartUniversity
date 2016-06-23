@@ -10,6 +10,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import com.smartuniversitygp.smartuniversity.helper.MyPreferenceManager;
+
+
 public class AppController extends Application {
 
     public static final String TAG = AppController.class.getSimpleName();
@@ -17,6 +20,8 @@ public class AppController extends Application {
     private RequestQueue mRequestQueue;
 
     private static AppController mInstance;
+
+    private MyPreferenceManager pref;
 
     @Override
     public void onCreate() {
@@ -50,5 +55,13 @@ public class AppController extends Application {
         if (mRequestQueue != null) {
             mRequestQueue.cancelAll(tag);
         }
+    }
+
+    public MyPreferenceManager getPrefManager() {
+        if (pref == null) {
+            pref = new MyPreferenceManager(this);
+        }
+
+        return pref;
     }
 }
