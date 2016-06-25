@@ -16,6 +16,7 @@ import com.android.volley.toolbox.StringRequest;
 
 import com.smartuniversitygp.smartuniversity.app.AppConfig;
 import com.smartuniversitygp.smartuniversity.app.AppController;
+import com.smartuniversitygp.smartuniversity.gcm.GCMClientManager;
 import com.smartuniversitygp.smartuniversity.helper.SessionManager;
 import com.smartuniversitygp.smartuniversity.helper.User;
 
@@ -109,6 +110,9 @@ public class LoginActivity extends AppCompatActivity {
                         // Create login session
                         session.setLogin(true, user);
 
+                        //Register token
+                        registerGCM(token);
+
                         // Launch main activity
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
@@ -142,6 +146,76 @@ public class LoginActivity extends AppCompatActivity {
                 params.put("email", email);
                 params.put("password", password);
 
+                return params;
+            }
+
+        };
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    private void registerGCM(final String userToken){
+        GCMClientManager pushClientManager = new GCMClientManager(this, AppConfig.PROJECT_NUMBER);
+        pushClientManager.registerIfNeeded(new GCMClientManager.RegistrationCompletedHandler() {
+            @Override
+            public void onSuccess(String registrationId, boolean isNewRegistration) {
+                sendTokenRequest(userToken, registrationId);
+                Toast.makeText(LoginActivity.this, "TOKEN: " + registrationId, Toast.LENGTH_LONG).show();
+                Log.d("Registration id",registrationId);
+                //send this registrationId to your server
+            }
+            @Override
+            public void onFailure(String ex) {
+                super.onFailure(ex);
+            }
+        });
+
+    }
+
+    private void sendTokenRequest(final String userToken, final String registrationId){
+        String tag_string_req = "req_gcm";
+        StringRequest strReq = new StringRequest(Method.POST,
+                AppConfig.URL_GCM_REGISTRATION, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Registration Response: " + response.toString());
+                hideDialog();
+
+                try {
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+                    // Check for error node in json
+                    if (!error) {
+                        return;
+                    } else {
+                        // Error in login. Get the error message
+                        String errorMsg = jObj.getString("message");
+                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    // JSON error
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting parameters to login url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", userToken);
+                params.put("regId", registrationId);
                 return params;
             }
 
