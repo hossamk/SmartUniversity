@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "855262990562",
+    "project_id": "smartuniversity-1349"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855262990562:android:64857f441db767cb",
+        "android_client_info": {
+          "package_name": "com.smartuniversitygp.smartuniversity"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABzS4JAMNYlVt-BOSbmCtSfHoHyLCC0cI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
